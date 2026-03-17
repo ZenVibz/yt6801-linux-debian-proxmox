@@ -256,3 +256,21 @@ This document aims to help other users avoid spending hours testing non-working 
 
 - Hardware details → hardware.md
 - Technical diagnosis → diagnosis.md
+
+## Search keywords
+
+Motorcomm YT6801 Linux  
+YT6801 Debian Ethernet not working  
+Proxmox YT6801 driver  
+N100 mini PC Ethernet Linux  
+N150 Linux network issue  
+Motorcomm YT6801 driver Linux
+
+## Related searches
+
+People often find this page when searching for:
+
+- YT6801 Ethernet not detected Linux
+- Motorcomm YT6801 Debian driver
+- Proxmox Ethernet not working N100 mini PC
+- N150 mini PC network driver Linux
