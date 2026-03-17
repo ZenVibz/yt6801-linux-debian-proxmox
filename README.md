@@ -241,3 +241,9 @@ Ethernet not working Linux
 Purpose
 
 This document aims to help other users avoid spending hours testing non-working solutions when encountering the Motorcomm YT6801 Ethernet compatibility issue under Linux.
+
+```markdown
+## Additional documentation
+
+- Hardware details → hardware.md
+- Technical diagnosis → diagnosis.md
