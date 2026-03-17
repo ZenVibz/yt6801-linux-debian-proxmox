@@ -1,6 +1,3 @@
-```markdown
-# Technical diagnosis
-
 ## Hardware detection
 
 The Ethernet controller is detected by the system:
