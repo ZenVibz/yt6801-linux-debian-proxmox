@@ -1,5 +1,15 @@
 Motorcomm YT6801 Ethernet not working on Debian / Proxmox (N100 / N150 Mini PC)
 
+## Table of contents
+
+- Hardware
+- Goal
+- Problem
+- Diagnosis
+- Solutions tested
+- Practical solutions
+- Summary
+
 Many N100 and N150 mini PCs use the Motorcomm YT6801 Ethernet controller.  
 Under Linux, Debian 13 and Proxmox VE, this Ethernet interface is often not detected because no driver is available in the standard kernels.
 
@@ -242,7 +252,6 @@ Purpose
 
 This document aims to help other users avoid spending hours testing non-working solutions when encountering the Motorcomm YT6801 Ethernet compatibility issue under Linux.
 
-```markdown
 ## Additional documentation
 
 - Hardware details → hardware.md
