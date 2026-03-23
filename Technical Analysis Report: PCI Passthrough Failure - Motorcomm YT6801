@@ -1,0 +1,61 @@
+1. Project Context
+Host: Ninkear N10PRO N150 Mini PC (Intel Twin Lake Architecture).
+
+Host OS: Proxmox VE 8.x (Kernel 6.17+).
+
+Target Device: Motorcomm Microelectronics YT6801 Gigabit Ethernet Controller (ID 1f0a:6801).
+
+Objective: Isolate the physical network controller to dedicate it exclusively to a Debian 13 (Sandbox) Virtual Machine via IOMMU.
+
+2. Hardware Specifications
+CPU: Intel N150.
+
+IOMMU: Enabled (Successfully segmented IOMMU groups).
+
+Isolation: The YT6801 controller resides alone in IOMMU Group 15 (Address 01:00.0), which is theoretically ideal for passthrough.
+
+3. Methodology & Troubleshooting Steps
+A. Core Configuration (Host)
+IOMMU activation and vfio-pci driver isolation were successfully implemented:
+
+Kernel Parameters: intel_iommu=on iommu=pt.
+
+VFIO Reservation: options vfio-pci ids=1f0a:6801.
+
+Verification: Kernel driver in use: vfio-pci confirmed on the host.
+
+B. Power Management Optimizations (ASPM/D3)
+To address the VM's inability to initialize the card, several layers of power-saving features were disabled to force the D0 (Active) power state:
+
+Global ASPM disabling: pcie_aspm=off.
+
+PCIe Port Power Management disabling: pcie_port_pm=off.
+
+Forced wakefulness via VFIO: disable_idle_d3=1.
+
+C. Error Handling & Reset Management
+To counter PCIe bus crashes during VM initialization:
+
+AER (Advanced Error Reporting) disabling: pci=noaer.
+
+Hardware reset and ROM-Bar disabling in the VM configuration.
+
+4. Analysis of Blockages (dmesg Logs)
+Despite all optimizations, the system logs consistently reported a recurring fatal error:
+
+Plaintext
+vfio-pci 0000:01:00.0: Unable to change power state from D3cold to D0, device inaccessible
+pcieport 0000:00:1c.0: broken device, retraining non-functional downstream link at 2.5GT/s
+vfio-pci 0000:01:00.0: not ready 65535ms after bus reset; giving up
+Technical Diagnosis:
+PCIe Bridge Electrical Instability: The PCIe bridge (00:1c.0) loses physical synchronization with the Motorcomm controller as soon as the VFIO driver attempts a Bus Reset cycle.
+
+Hardware/Firmware Incompatibility: The YT6801 controller, as implemented on this Ninkear N150 motherboard, appears unable to exit the D3cold deep sleep state without full initialization by the BIOS or a specific host driver.
+
+Broken Downstream Link: The inability to retrain the link indicates that the hardware becomes electrically unresponsive to the PCIe bus after the VM attempt.
+
+5. Conclusion
+Direct PCI Passthrough of the Motorcomm YT6801 controller on the Ninkear N150 architecture is deemed impossible with current kernel versions and firmware. The hardware does not support the reset and power state transition requirements necessary for hardware virtualization via IOMMU.
+
+Acknowledgments
+Technical research, log diagnostics, and kernel optimization attempts presented in this report were conducted in collaboration with Gemini AI (Google). This assistance helped explore the boundaries of virtualization on Intel N-series architectures and validate the hardware constraints of the YT6801 controller.
